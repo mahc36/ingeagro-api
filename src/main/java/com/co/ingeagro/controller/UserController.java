@@ -1,14 +1,15 @@
 package com.co.ingeagro.controller;
 
+import com.co.ingeagro.model.Profile;
 import com.co.ingeagro.model.User;
+import com.co.ingeagro.service.profile.IProfileService;
 import com.co.ingeagro.service.user.IUserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
-
+import java.util.Objects;
 // http://localhost:8383/user/save
 
 @Data
@@ -18,15 +19,27 @@ import java.util.List;
 public class UserController {
 
     private final IUserService userService;
+    private final IProfileService profileService;
 
     @Autowired
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService,
+                          IProfileService profileService) {
         this.userService = userService;
+        this.profileService = profileService;
     }
 
     @RequestMapping(value= ControllerConstants.User.LOGIN ,method = RequestMethod.POST)
     public User login(@RequestBody final User user){
         return userService.login(user);
+    }
+
+    @RequestMapping(value= ControllerConstants.User.LOGIN_PROFILE ,method = RequestMethod.POST)
+    public Profile loginProfile(@RequestBody final User user){
+        User loggedUser = userService.login(user);
+        if(Objects.nonNull(loggedUser)){
+            return profileService.getProfileById(loggedUser.getId());
+        }
+        throw new NullPointerException("An error has occurred when trying to login");
     }
 
     @RequestMapping(value= ControllerConstants.SAVE ,method = RequestMethod.POST)

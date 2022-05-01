@@ -1,7 +1,5 @@
 package com.co.ingeagro.model;
 
-import com.co.ingeagro.data.ProductData;
-import com.co.ingeagro.data.UserData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

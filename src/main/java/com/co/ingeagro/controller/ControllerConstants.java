@@ -16,6 +16,7 @@ public interface ControllerConstants {
         String ROOT_REQUEST = "/user";
         String FIND_BY_USERNAME = "/findByUsername";
         String LOGIN = "/login";
+        String LOGIN_PROFILE = "/login-profile";
     }
 
     interface Gender{
