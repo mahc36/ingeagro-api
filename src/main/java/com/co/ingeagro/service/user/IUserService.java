@@ -11,7 +11,7 @@ public interface IUserService {
      * @param model with username and password to login
      * @return the logged person
      */
-    User login(User model);
+    User login(User model) throws Exception;
 
     /**
      *

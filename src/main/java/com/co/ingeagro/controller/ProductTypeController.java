@@ -1,6 +1,5 @@
 package com.co.ingeagro.controller;
 
-import com.co.ingeagro.model.Gender;
 import com.co.ingeagro.model.ProductType;
 import com.co.ingeagro.service.producttype.IProductTypeService;
 import lombok.Data;

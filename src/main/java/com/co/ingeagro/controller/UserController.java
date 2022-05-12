@@ -29,12 +29,12 @@ public class UserController {
     }
 
     @RequestMapping(value= ControllerConstants.User.LOGIN ,method = RequestMethod.POST)
-    public User login(@RequestBody final User user){
+    public User login(@RequestBody final User user) throws Exception{
         return userService.login(user);
     }
 
     @RequestMapping(value= ControllerConstants.User.LOGIN_PROFILE ,method = RequestMethod.POST)
-    public Profile loginProfile(@RequestBody final User user){
+    public Profile loginProfile(@RequestBody final User user) throws Exception{
         User loggedUser = userService.login(user);
         if(Objects.nonNull(loggedUser)){
             return profileService.getProfileById(loggedUser.getId());
