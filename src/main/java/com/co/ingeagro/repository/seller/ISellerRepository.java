@@ -1,6 +1,9 @@
 package com.co.ingeagro.repository.seller;
 
+import com.co.ingeagro.data.ProductData;
 import com.co.ingeagro.data.SellerData;
+
+import java.util.List;
 
 public interface ISellerRepository {
 
@@ -17,5 +20,19 @@ public interface ISellerRepository {
      * @return saved seller
      */
     SellerData save(SellerData seller);
+
+    /**
+     *
+     * @param id to find a seller
+     * @return a seller given an id
+     */
+    SellerData getById(Long id);
+
+    /**
+     *
+     * @param sellerId the id of the seller
+     * @return a list of products
+     */
+    List<ProductData> getAllBySellerId(Long sellerId);
 
 }

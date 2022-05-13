@@ -27,6 +27,16 @@ public interface ControllerConstants {
         String ROOT_REQUEST = "/product-type";
     }
 
+    interface Product{
+        String ROOT_REQUEST = "/product";
+        String PAGEABLE = "/pagination";
+        String GET_BY_SELLER_ID = "/getBySellerId";
+    }
+
+    interface QuantityType{
+        String ROOT_REQUEST = "/qty-type";
+    }
+
     interface IdentificationType{
         String ROOT_REQUEST = "/identification-type";
     }

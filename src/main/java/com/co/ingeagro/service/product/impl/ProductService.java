@@ -1,0 +1,63 @@
+package com.co.ingeagro.service.product.impl;
+
+import com.co.ingeagro.converter.Converter;
+import com.co.ingeagro.data.ProductData;
+import com.co.ingeagro.exception.IngeagroException;
+import com.co.ingeagro.model.Product;
+import com.co.ingeagro.model.form.ProductForm;
+import com.co.ingeagro.repository.product.IProductRepository;
+import com.co.ingeagro.service.product.IProductService;
+import com.co.ingeagro.service.seller.ISellerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+
+@Service
+public class ProductService implements IProductService {
+
+    private Converter<ProductData, Product> converter;
+    private IProductRepository repository;
+    private ISellerService sellerService;
+
+    @Autowired
+    public ProductService(Converter<ProductData, Product> converter,
+                          IProductRepository repository,
+                          ISellerService sellerService) {
+        this.converter = converter;
+        this.repository = repository;
+        this.sellerService = sellerService;
+    }
+
+    @Override
+    public void saveProduct(ProductForm product) throws IngeagroException {
+        ProductData productData = converter.convert2Data(product.getProduct());
+        List<ProductData> productsSaved = this.repository.saveAll(Collections.singletonList(productData));
+        List<Product> savedProducts = converter.convertAll2Model(productsSaved);
+        this.sellerService.updateProducts(product.getSellerId(), savedProducts);
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return converter.convertAll2Model(repository.getAll());
+    }
+
+    @Override
+    public Page<Product> getAll(Pageable page) {
+        Page<ProductData> all = repository.getAll(page);
+        List<ProductData> content = all.getContent();
+        List<Product> contentModel = converter.convertAll2Model(content);
+        Page<Product> pageModel = new PageImpl<>(contentModel, page, all.getTotalElements());
+        return pageModel;
+    }
+
+    @Override
+    public List<Product> getAllBySellerId(Long sellerId) {
+        List<ProductData> productsData = repository.getBySellerId(sellerId);
+        return converter.convertAll2Model(productsData);
+    }
+}

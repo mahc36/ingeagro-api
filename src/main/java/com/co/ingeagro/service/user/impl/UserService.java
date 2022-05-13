@@ -3,7 +3,7 @@ package com.co.ingeagro.service.user.impl;
 import com.co.ingeagro.converter.Converter;
 import com.co.ingeagro.converter.user.UserConverter;
 import com.co.ingeagro.data.UserData;
-import com.co.ingeagro.exception.LoginException;
+import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Buyer;
 import com.co.ingeagro.model.Seller;
 import com.co.ingeagro.model.User;
@@ -14,7 +14,6 @@ import com.co.ingeagro.service.user.IUserService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,28 +41,28 @@ public class UserService implements IUserService {
     @Override
     public User login(User model) throws Exception {
         if(Objects.isNull(model)){
-            throw new LoginException("No se pudo hacer login");
+            throw new IngeagroException("No se pudo hacer login");
         }
         if(null == model.getUsername() || Strings.isBlank(model.getUsername())){
-            throw new LoginException("El usuario no puede estar nulo o vacio");
+            throw new IngeagroException("El usuario no puede estar nulo o vacio");
         }
         if(null == model.getPassword() || Strings.isBlank(model.getPassword())){
-            throw new LoginException("La constrasena no puede estar nulo o vacio");
+            throw new IngeagroException("La constrasena no puede estar nulo o vacio");
         }
         if(existByUsername(model.getUsername())){
             User byUsername = findByUsername(model.getUsername());
             String password = model.getPassword();
             checkStringParam(password, "password");
             if(Objects.nonNull(byUsername) && !password.equals(byUsername.getPassword())){
-                throw new LoginException("El usuario o la contrasena no coinciden");
+                throw new IngeagroException("El usuario o la contrasena no coinciden");
             }
 
             if(Objects.nonNull(byUsername) && password.equals(byUsername.getPassword())){
                 return byUsername;
             }
-            throw new LoginException("No se pudo hacer login");
+            throw new IngeagroException("No se pudo hacer login");
         }
-        throw new LoginException(String.format("%s %s %s", "El usuario", model.getUsername(), "no existe"));
+        throw new IngeagroException(String.format("%s %s %s", "El usuario", model.getUsername(), "no existe"));
     }
 
     @Override

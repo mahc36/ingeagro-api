@@ -23,7 +23,7 @@ public class SellerData {
     private Long id;
     @OneToOne
     private UserData user;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     List<ProductData> products;
     @Column
     private LocalDateTime timeCreation;

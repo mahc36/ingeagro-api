@@ -1,6 +1,6 @@
 package com.co.ingeagro.exceptionhandler;
 
-import com.co.ingeagro.exception.LoginException;
+import com.co.ingeagro.exception.IngeagroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +14,7 @@ public class CustomExceptionHandler {
         super();
     }
 
-    @ExceptionHandler({ LoginException.class })
+    @ExceptionHandler({ IngeagroException.class })
     @ResponseStatus(value= HttpStatus.CONFLICT)
     public @ResponseBody ErrorResponse handleException(Exception ex ) {
         return ErrorResponse.builder().error(ex.getMessage()).build();

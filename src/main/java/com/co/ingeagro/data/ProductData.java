@@ -23,13 +23,13 @@ public class ProductData {
     private Long id;
     @Column
     private BigDecimal price;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private StockData stock;
-    @OneToOne
+    @OneToOne()
     private QuantityTypeData quantityType;
     @Column
     private String description;
-    @OneToOne
+    @OneToOne()
     private ProductTypeData productType;
     @Column
     private LocalDateTime timeCreation;
