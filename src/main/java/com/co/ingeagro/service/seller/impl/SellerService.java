@@ -62,7 +62,6 @@ public class SellerService implements ISellerService {
             this.save(byUserId);
         }
         else{
-            // TODO - create a new exception
             throw new IngeagroException("No se encontro usuario");
         }
     }
