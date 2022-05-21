@@ -34,5 +34,12 @@ public interface IProductRepository {
      */
     List<ProductData> getBySellerId(Long sellerId);
 
+    /**
+     * Gets a product given its id
+     * @param productId the product id
+     * @return a product from DB
+     */
+    ProductData getById(Long productId);
+
 
 }

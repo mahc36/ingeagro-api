@@ -50,4 +50,9 @@ public class ProductController {
         return sellerService.getAllBySellerId(sellerId);
     }
 
+    @RequestMapping(value= ControllerConstants.FIND_BY_ID ,method = RequestMethod.GET)
+    public Product findByID(@Param("productId") Long productId) throws IngeagroException {
+        return productService.findById(productId);
+    }
+
 }

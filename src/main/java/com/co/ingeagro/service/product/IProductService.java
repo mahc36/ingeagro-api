@@ -35,4 +35,11 @@ public interface IProductService {
      */
     List<Product> getAllBySellerId(Long sellerId);
 
+    /**
+     * Get a product given its Id
+     * @param productId the product id
+     * @return a product
+     */
+    Product findById(Long productId) throws IngeagroException;
+
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductService implements IProductService {
@@ -59,5 +60,14 @@ public class ProductService implements IProductService {
     public List<Product> getAllBySellerId(Long sellerId) {
         List<ProductData> productsData = repository.getBySellerId(sellerId);
         return converter.convertAll2Model(productsData);
+    }
+
+    @Override
+    public Product findById(Long productId) throws IngeagroException {
+        ProductData product = repository.getById(productId);
+        if(Objects.isNull(product)){
+            throw new IngeagroException(String.format("El producto con el id %s no existe", productId));
+        }
+        return converter.convert2Model(product);
     }
 }

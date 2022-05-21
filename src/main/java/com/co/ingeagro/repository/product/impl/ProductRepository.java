@@ -3,12 +3,14 @@ package com.co.ingeagro.repository.product.impl;
 import com.co.ingeagro.data.ProductData;
 import com.co.ingeagro.repository.product.IProductRepository;
 import com.co.ingeagro.repositoryjpa.ProductRepositoryJPA;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepository implements IProductRepository {
@@ -37,8 +39,12 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public List<ProductData> getBySellerId(Long sellerId){
-        // TODO - Method not implemented
-        return null;
+        throw new NotYetImplementedException();
     }
 
+    @Override
+    public ProductData getById(Long productId) {
+        Optional<ProductData> byId = jpa.findById(productId);
+        return byId.orElse(null);
+    }
 }
