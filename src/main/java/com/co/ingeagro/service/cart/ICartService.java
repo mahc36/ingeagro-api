@@ -4,6 +4,7 @@ import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Cart;
 import com.co.ingeagro.model.SellProduct;
 import com.co.ingeagro.model.form.AddToCartForm;
+import com.co.ingeagro.model.form.RemoveItemFromCartForm;
 
 public interface ICartService {
 
@@ -28,5 +29,11 @@ public interface ICartService {
      */
     Cart getANewCart(Long buyerId);
 
+    /**
+     *
+     * @param item containing the cartId and sellProduct id to remove from cart
+     * @return the updated cart from DB
+     */
+    Cart removeItemFromCart(RemoveItemFromCartForm item) throws IngeagroException;
 
 }

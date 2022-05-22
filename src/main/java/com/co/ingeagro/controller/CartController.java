@@ -5,6 +5,7 @@ import com.co.ingeagro.model.Buyer;
 import com.co.ingeagro.model.Cart;
 import com.co.ingeagro.model.form.AddToCartForm;
 import com.co.ingeagro.model.form.ProductForm;
+import com.co.ingeagro.model.form.RemoveItemFromCartForm;
 import com.co.ingeagro.service.cart.ICartService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,12 @@ public class CartController {
     public Cart save(@RequestBody AddToCartForm form) throws IngeagroException {
         return cartService.addProduct(form);
     }
+
+    @RequestMapping(value= ControllerConstants.Cart.REMOVE_ITEM_FROM_CART ,method = RequestMethod.POST)
+    public Cart save(@RequestBody RemoveItemFromCartForm form) throws IngeagroException {
+        return cartService.removeItemFromCart(form);
+    }
+
+
 
 }

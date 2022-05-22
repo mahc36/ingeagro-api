@@ -9,6 +9,7 @@ import com.co.ingeagro.model.Cart;
 import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.SellProduct;
 import com.co.ingeagro.model.form.AddToCartForm;
+import com.co.ingeagro.model.form.RemoveItemFromCartForm;
 import com.co.ingeagro.repository.cart.ICartRepository;
 import com.co.ingeagro.service.buyer.IBuyerService;
 import com.co.ingeagro.service.cart.ICartService;
@@ -112,5 +113,29 @@ public class CartService implements ICartService {
         Cart cart = Cart.builder().user(buyer).build();
         CartData newCart = repository.getANewCart(converter.convert2Data(cart));
         return converter.convert2Model(newCart);
+    }
+
+    @Override
+    public Cart removeItemFromCart(RemoveItemFromCartForm item) throws IngeagroException {
+        if(Objects.isNull(item) || Objects.isNull(item.getCartId()) || Objects.isNull(item.getSellProductId())){
+            throw new IngeagroException("No se pudo eliminar el producto del carrito");
+        }
+        if(item.getCartId() <= 0){
+            throw new IngeagroException("No se pudo eliminar el producto del carrito");
+        }
+        CartData cart = repository.getACartById(item.getCartId());
+        if(Objects.isNull(cart) || Objects.isNull(cart.getProducts()) || cart.getProducts().size() <= 0){
+            throw new IngeagroException("No hay prouctos por eliminar en este carrito");
+        }
+        boolean isThereAnItem = cart.getProducts().stream().anyMatch(p -> item.getSellProductId().equals(p.getId()));
+        if(!isThereAnItem){
+            throw new IngeagroException("No hay un item que eliminar del carrito");
+        }
+        for (int i = 0; i < cart.getProducts().size() ; ++i){
+            if(item.getSellProductId().equals(cart.getProducts().get(i).getId())){
+                cart.getProducts().remove(i);
+            }
+        }
+        return converter.convert2Model(repository.save(cart));
     }
 }
