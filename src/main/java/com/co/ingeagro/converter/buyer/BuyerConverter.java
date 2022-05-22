@@ -35,6 +35,7 @@ public class BuyerConverter implements Converter<BuyerData, Buyer> {
                 .id(model.getId())
                 .user(userConverter.convert2Data(model.getUser()))
                 .isGuest(model.getIsGuest())
+                .creationTime(model.getTimeCreation())
                 .guestUser(guestUserConverter.convert2Data(model.getGuestUser()))
                 .build();
     }
@@ -48,6 +49,7 @@ public class BuyerConverter implements Converter<BuyerData, Buyer> {
                 .id(data.getId())
                 .user(userConverter.convert2Model(data.getUser()))
                 .isGuest(data.getIsGuest())
+                .timeCreation(data.getCreationTime())
                 .guestUser(guestUserConverter.convert2Model(data.getGuestUser()))
                 .build();
     }

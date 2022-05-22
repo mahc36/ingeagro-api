@@ -18,4 +18,6 @@ public interface IBuyerService {
      */
     Buyer save(Buyer buyer);
 
+    Buyer getAGuestBuyer();
+
 }

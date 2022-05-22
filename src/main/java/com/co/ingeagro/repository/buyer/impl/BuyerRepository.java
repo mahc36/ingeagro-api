@@ -1,6 +1,7 @@
 package com.co.ingeagro.repository.buyer.impl;
 
 import com.co.ingeagro.data.BuyerData;
+import com.co.ingeagro.model.Buyer;
 import com.co.ingeagro.repository.buyer.IBuyerRepository;
 import com.co.ingeagro.repositoryjpa.BuyerRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class BuyerRepository implements IBuyerRepository {
 
     @Override
     public BuyerData save(BuyerData buyer) {
+        return repositoryJPA.save(buyer);
+    }
+
+    @Override
+    public BuyerData getAGuestBuyer(BuyerData buyer) {
         return repositoryJPA.save(buyer);
     }
 }

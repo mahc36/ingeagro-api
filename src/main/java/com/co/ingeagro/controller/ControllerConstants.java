@@ -23,6 +23,18 @@ public interface ControllerConstants {
         String ROOT_REQUEST = "/gender";
     }
 
+    interface Buyer{
+        String ROOT_REQUEST = "/buyer";
+        String GET_A_BUYER = "/getABuyer";
+    }
+
+    interface Cart{
+        String ROOT_REQUEST = "/cart";
+        String ADD_PRODUCT_TO_CART = "/addProduct";
+        String GET_A_CART = "/getACart";
+        String GET_A_NEW_CART = "/getANewCart";
+    }
+
     interface ProductType{
         String ROOT_REQUEST = "/product-type";
     }

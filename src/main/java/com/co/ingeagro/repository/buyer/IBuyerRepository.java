@@ -17,4 +17,10 @@ public interface IBuyerRepository {
      * @return saved buyer
      */
     BuyerData save(BuyerData buyer);
+
+    /**
+     *
+     * @return a guest Buyer from DB
+     */
+    BuyerData getAGuestBuyer(BuyerData buyer);
 }

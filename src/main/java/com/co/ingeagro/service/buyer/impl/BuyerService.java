@@ -9,6 +9,7 @@ import com.co.ingeagro.service.buyer.IBuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -34,5 +35,17 @@ public class BuyerService implements IBuyerService {
             throw new NullPointerException("buyer is null");
         }
         return converter.convert2Model(buyerRepository.save(converter.convert2Data(buyer)));
+    }
+
+    @Override
+    public Buyer getAGuestBuyer() {
+        Buyer b = Buyer.builder()
+                .isGuest(Boolean.TRUE)
+                .timeCreation(LocalDateTime.now())
+                .build();
+
+        BuyerData buyerData = converter.convert2Data(b);
+        BuyerData savedGuestUser = buyerRepository.getAGuestBuyer(buyerData);
+        return converter.convert2Model(savedGuestUser);
     }
 }
