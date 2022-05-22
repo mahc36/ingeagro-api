@@ -21,9 +21,9 @@ public class CartData {
     @Column
     private Long id;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<SellProductData> products;
-    @ManyToOne
+    @ManyToOne()
     private BuyerData user;
 
 }

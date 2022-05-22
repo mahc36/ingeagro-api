@@ -35,4 +35,9 @@ public class CartRepository implements ICartRepository {
     public CartData getANewCart(CartData cartData) {
         return jpa.save(cartData);
     }
+
+    @Override
+    public CartData save(CartData cart) {
+        return jpa.save(cart);
+    }
 }

@@ -25,4 +25,6 @@ public interface ICartRepository {
      */
     CartData getANewCart(CartData cart);
 
+    CartData save(CartData cart);
+
 }

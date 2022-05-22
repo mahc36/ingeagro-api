@@ -15,8 +15,6 @@ import com.co.ingeagro.service.cart.ICartService;
 import com.co.ingeagro.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,9 +26,15 @@ public class CartService implements ICartService {
     private IBuyerService buyerService;
     private Converter<CartData, Cart> converter;
 
+
     @Autowired
-    public CartService(ICartRepository repository, CartConverter converter) {
+    public CartService(ICartRepository repository,
+                       IProductService productService,
+                       IBuyerService buyerService,
+                       CartConverter converter) {
         this.repository = repository;
+        this.productService = productService;
+        this.buyerService = buyerService;
         this.converter = converter;
     }
 
@@ -57,17 +61,49 @@ public class CartService implements ICartService {
 
         if(Objects.nonNull(cart)){
             if(Objects.nonNull(cart.getProducts()) && cart.getProducts().size() > 0){
-                cart.getProducts().add(sellProduct);
-                repository.addProduct(converter.convert2Data(cart));
+                if (cart.getProducts().stream().anyMatch(p -> Objects.equals(p.getProduct().getId(), product.getId()))){
+                    updateProductOnCart(addToCartForm, product, cart);
+                }
+                else{
+                    addNewProductToCart(cart, sellProduct);
+                }
+                return converter.convert2Model(repository.save(converter.convert2Data(cart)));
             }
             else{
-             cart.setProducts(List.of(sellProduct));
+                initializeCartProducts(cart, sellProduct);
             }
             if(Objects.isNull(cart.getUser())){
                 cart.setUser(buyerService.getByUserId(addToCartForm.getBuyerId()));
             }
+            return converter.convert2Model(repository.save(converter.convert2Data(cart)));
         }
-        return cart;
+        throw new IngeagroException("No se pudo agregar producto al carrito");
+    }
+
+    private void initializeCartProducts(Cart cart, SellProduct sellProduct) {
+        cart.setProducts(List.of(sellProduct));
+    }
+
+    private void addNewProductToCart(Cart cart, SellProduct sellProduct) {
+        cart.getProducts().add(sellProduct);
+    }
+
+    private void updateProductOnCart(AddToCartForm addToCartForm, Product product, Cart cart) {
+        Integer remainingQuantity = product.getStock().getRemainingQuantity();
+        Integer qtyAlreadyInCart = 0;
+
+        for (int i= 0; i < cart.getProducts().size() ; i++ ) {
+            SellProduct sellProduct = cart.getProducts().get(i);
+            if(sellProduct.getProduct().getId().equals(product.getId())){
+                qtyAlreadyInCart = sellProduct.getQuantity();
+                if((addToCartForm.getQty() + qtyAlreadyInCart) > remainingQuantity){
+                    cart.getProducts().get(i).setQuantity(remainingQuantity);
+                }
+                else{
+                    cart.getProducts().get(i).setQuantity(qtyAlreadyInCart + addToCartForm.getQty());
+                }
+            }
+        }
     }
 
     @Override
