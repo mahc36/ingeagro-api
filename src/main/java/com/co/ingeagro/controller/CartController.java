@@ -4,6 +4,7 @@ import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Buyer;
 import com.co.ingeagro.model.Cart;
 import com.co.ingeagro.model.form.AddToCartForm;
+import com.co.ingeagro.model.form.BuyCartForm;
 import com.co.ingeagro.model.form.ProductForm;
 import com.co.ingeagro.model.form.RemoveItemFromCartForm;
 import com.co.ingeagro.service.cart.ICartService;
@@ -47,6 +48,9 @@ public class CartController {
         return cartService.removeItemFromCart(form);
     }
 
-
+    @RequestMapping(value= ControllerConstants.Cart.BUY_CART ,method = RequestMethod.POST)
+    public Cart buy(@RequestBody BuyCartForm form) throws IngeagroException {
+        return cartService.buyCart(form);
+    }
 
 }

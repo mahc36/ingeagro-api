@@ -3,12 +3,14 @@ package com.co.ingeagro.service.cart.impl;
 import com.co.ingeagro.converter.Converter;
 import com.co.ingeagro.converter.cart.CartConverter;
 import com.co.ingeagro.data.CartData;
+import com.co.ingeagro.data.SellProductData;
 import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Buyer;
 import com.co.ingeagro.model.Cart;
 import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.SellProduct;
 import com.co.ingeagro.model.form.AddToCartForm;
+import com.co.ingeagro.model.form.BuyCartForm;
 import com.co.ingeagro.model.form.RemoveItemFromCartForm;
 import com.co.ingeagro.repository.cart.ICartRepository;
 import com.co.ingeagro.service.buyer.IBuyerService;
@@ -22,6 +24,7 @@ import java.util.Objects;
 @Service
 public class CartService implements ICartService {
 
+    public static final String OCURRIÓ_UN_PROBLEMA_AL_FINALIZAR_LA_COMPRA = "Ocurrió un problema al finalizar la compra";
     private ICartRepository repository;
     private IProductService productService;
     private IBuyerService buyerService;
@@ -137,5 +140,48 @@ public class CartService implements ICartService {
             }
         }
         return converter.convert2Model(repository.save(cart));
+    }
+
+    @Override
+    public Cart buyCart(BuyCartForm form) throws IngeagroException {
+        if(Objects.isNull(form) || Objects.isNull(form.getCartId())){
+            throw new IngeagroException(OCURRIÓ_UN_PROBLEMA_AL_FINALIZAR_LA_COMPRA);
+        }
+        CartData cart = repository.getACartById(form.getCartId());
+        if(Objects.isNull(cart) && Objects.nonNull(cart.getProducts())){
+            throw new IngeagroException(OCURRIÓ_UN_PROBLEMA_AL_FINALIZAR_LA_COMPRA);
+        }
+        //*************** INI - VALIDATE STOCK ******************
+        validateQuantityStock(cart);
+        //*************** FINISH - VALIDATE STOCK ******************
+        for (int i=0; i<cart.getProducts().size(); i++){
+            SellProductData sp = cart.getProducts().get(i);
+            // Subtract the remaining qty with the qty bought
+            cart.getProducts()
+                    .get(i).getProduct().getStock()
+                    .setRemainingQuantity(sp.getProduct().getStock().getRemainingQuantity() - sp.getQuantity());
+            //Sum the sold qty with the qty bought
+            cart.getProducts().get(i).getProduct()
+                    .getStock().setSoldQuantity(sp.getProduct().getStock().getSoldQuantity() + sp.getQuantity());
+
+        }
+        cart.setBought(Boolean.TRUE);
+        return converter.convert2Model(repository.save(cart));
+    }
+
+    private void validateQuantityStock(CartData cart) throws IngeagroException {
+        List<SellProductData> products = cart.getProducts();
+        for(SellProductData sp : products){
+            // if the qty of the item cart is greater than the remaining product stock, then the buy is not succeeded
+            if(sp.getQuantity() > sp.getProduct().getStock().getRemainingQuantity()){
+                if(sp.getProduct().getStock().getRemainingQuantity() > 0){
+                    throw new IngeagroException(String.format("El producto %s no tiene stock: solo se pueden %d",
+                            sp.getProduct().getProductType().getName(), sp.getProduct().getStock().getRemainingQuantity()));
+                }
+                else{
+                    throw new IngeagroException(String.format("El producto %s no tiene stock", sp.getProduct().getProductType().getName()));
+                }
+            }
+        }
     }
 }

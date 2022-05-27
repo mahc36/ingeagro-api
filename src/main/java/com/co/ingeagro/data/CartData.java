@@ -25,5 +25,7 @@ public class CartData {
     private List<SellProductData> products;
     @ManyToOne()
     private BuyerData user;
+    @Column
+    private Boolean bought;
 
 }

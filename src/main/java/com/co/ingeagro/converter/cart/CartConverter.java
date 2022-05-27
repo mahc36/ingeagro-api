@@ -39,6 +39,7 @@ public class CartConverter implements Converter<CartData, Cart> {
                 .id(model.getId())
                 .user(buyerConverter.convert2Data(model.getUser()))
                 .products(sellProductConverter.convertAll2Data(model.getProducts()))
+                .bought(model.getBought())
                 .build();
     }
 
@@ -51,6 +52,7 @@ public class CartConverter implements Converter<CartData, Cart> {
                 .id(data.getId())
                 .user(buyerConverter.convert2Model(data.getUser()))
                 .products(sellProductConverter.convertAll2Model(data.getProducts()))
+                .bought(data.getBought())
                 .build();
     }
 }

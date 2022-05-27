@@ -32,6 +32,7 @@ public interface ControllerConstants {
         String ROOT_REQUEST = "/cart";
         String ADD_PRODUCT_TO_CART = "/addProduct";
         String REMOVE_ITEM_FROM_CART = "/removeItem";
+        String BUY_CART = "/buy";
         String GET_A_CART = "/getACart";
         String GET_A_NEW_CART = "/getANewCart";
     }

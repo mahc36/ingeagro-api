@@ -16,5 +16,6 @@ public class Cart {
     private Long id;
     private List<SellProduct> products;
     private Buyer user;
+    private Boolean bought;
 
 }
