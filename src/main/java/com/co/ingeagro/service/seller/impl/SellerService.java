@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SellerService implements ISellerService {
@@ -68,6 +69,18 @@ public class SellerService implements ISellerService {
 
     @Override
     public List<Product> getAllBySellerId(Long sellerId) {
-        return productConverter.convertAll2Model(repository.getAllBySellerId(sellerId));
+        List<ProductData> myProducts = repository.getAllBySellerId(sellerId);
+        // Just sorting
+        myProducts = myProducts.stream().sorted((p1, p2) -> {
+            if(p1.getStock().getRemainingQuantity() > p2.getStock().getRemainingQuantity()){
+                return -1;
+            }
+            else if(p2.getStock().getRemainingQuantity() > p1.getStock().getRemainingQuantity()){
+                return 1;
+            }
+            return 0;
+        }).collect(Collectors.toList());
+
+        return productConverter.convertAll2Model(myProducts);
     }
 }
