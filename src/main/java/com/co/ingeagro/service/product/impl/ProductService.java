@@ -8,6 +8,7 @@ import com.co.ingeagro.model.form.ProductForm;
 import com.co.ingeagro.repository.product.IProductRepository;
 import com.co.ingeagro.service.product.IProductService;
 import com.co.ingeagro.service.seller.ISellerService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -44,7 +47,15 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getAll() {
-        return converter.convertAll2Model(repository.getAll());
+        List<ProductData> products = repository.getAll();
+        products = products.stream()
+                .filter(isThereStock()).collect(Collectors.toList());
+        return converter.convertAll2Model(products);
+    }
+
+    @NotNull
+    private Predicate<ProductData> isThereStock() {
+        return p -> p.getStock().getRemainingQuantity() > 0;
     }
 
     @Override
