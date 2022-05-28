@@ -42,7 +42,9 @@ public class ProductService implements IProductService {
         ProductData productData = converter.convert2Data(product.getProduct());
         List<ProductData> productsSaved = this.repository.saveAll(Collections.singletonList(productData));
         List<Product> savedProducts = converter.convertAll2Model(productsSaved);
-        this.sellerService.updateProducts(product.getSellerId(), savedProducts);
+        if(Objects.nonNull(product.getUpdateProduct()) && !product.getUpdateProduct()){
+            this.sellerService.updateProducts(product.getSellerId(), savedProducts);
+        }
     }
 
     @Override

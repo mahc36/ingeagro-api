@@ -14,4 +14,5 @@ public class ProductForm {
 
     private Product product;
     private Long sellerId;
+    private Boolean updateProduct;
 }
