@@ -47,4 +47,9 @@ public class ProductRepository implements IProductRepository {
         Optional<ProductData> byId = jpa.findById(productId);
         return byId.orElse(null);
     }
+
+    @Override
+    public void removeByProductId(Long productId) {
+        jpa.deleteById(productId);
+    }
 }

@@ -7,6 +7,7 @@ public interface ControllerConstants {
 
     String CREATE = "/create";
     String SAVE = "/save";
+    String REMOVE = "/remove";
     String UPDATE = "/update";
     String FIND = "/find";
     String FIND_ALL = "/findAll";

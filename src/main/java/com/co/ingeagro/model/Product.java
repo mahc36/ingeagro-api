@@ -23,5 +23,5 @@ public class Product {
     private String description;
     private ProductType productType;
     private LocalDateTime timeCreation;
-
+    private Boolean active;
 }

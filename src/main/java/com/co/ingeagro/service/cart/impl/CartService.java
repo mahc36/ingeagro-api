@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService implements ICartService {
@@ -51,6 +52,12 @@ public class CartService implements ICartService {
         }
         else{
             CartData cartData = repository.getACartById(cartId);
+            List<SellProductData> products = cartData.getProducts().stream()
+                    .filter(p -> {
+                        return p.getProduct() != null & (p.getProduct().getActive() == null
+                                || p.getProduct().getActive());
+                    }).collect(Collectors.toList());
+            cartData.setProducts(products);
             return converter.convert2Model(cartData);
         }
     }
@@ -58,6 +65,9 @@ public class CartService implements ICartService {
     @Override
     public Cart addProduct(AddToCartForm addToCartForm) throws IngeagroException {
         Product product = productService.findById(addToCartForm.getProductId());
+        if(Objects.nonNull(product.getActive()) && !product.getActive()){
+            throw new IngeagroException("Este producto ha sido removido, no se puede agregar al carrito");
+        }
         Cart cart = this.getACartById(addToCartForm.getCartId());
         SellProduct sellProduct = SellProduct.builder()
                 .quantity(addToCartForm.getQty())

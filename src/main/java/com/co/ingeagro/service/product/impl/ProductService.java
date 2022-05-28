@@ -5,6 +5,7 @@ import com.co.ingeagro.data.ProductData;
 import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.form.ProductForm;
+import com.co.ingeagro.model.form.RemoveProductForm;
 import com.co.ingeagro.repository.product.IProductRepository;
 import com.co.ingeagro.service.product.IProductService;
 import com.co.ingeagro.service.seller.ISellerService;
@@ -42,7 +43,7 @@ public class ProductService implements IProductService {
         ProductData productData = converter.convert2Data(product.getProduct());
         List<ProductData> productsSaved = this.repository.saveAll(Collections.singletonList(productData));
         List<Product> savedProducts = converter.convertAll2Model(productsSaved);
-        if(Objects.nonNull(product.getUpdateProduct()) && !product.getUpdateProduct()){
+        if(Objects.isNull(product.getUpdateProduct()) || !product.getUpdateProduct()){
             this.sellerService.updateProducts(product.getSellerId(), savedProducts);
         }
     }
@@ -51,8 +52,17 @@ public class ProductService implements IProductService {
     public List<Product> getAll() {
         List<ProductData> products = repository.getAll();
         products = products.stream()
-                .filter(isThereStock()).collect(Collectors.toList());
+                .filter(isThereStock())
+                .filter(isActive())
+                .collect(Collectors.toList());
         return converter.convertAll2Model(products);
+    }
+
+    @NotNull
+    private Predicate<ProductData> isActive() {
+        return p -> {
+            return p.getActive() == null || p.getActive();
+        };
     }
 
     @NotNull
@@ -82,5 +92,12 @@ public class ProductService implements IProductService {
             throw new IngeagroException(String.format("El producto con el id %s no existe", productId));
         }
         return converter.convert2Model(product);
+    }
+
+    @Override
+    public void removeProduct(RemoveProductForm product) throws IngeagroException {
+        ProductData productData = repository.getById(product.getProductId());
+        productData.setActive(Boolean.FALSE);
+        repository.saveAll(Collections.singletonList(productData));
     }
 }

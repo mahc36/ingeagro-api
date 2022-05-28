@@ -33,5 +33,6 @@ public class ProductData {
     private ProductTypeData productType;
     @Column
     private LocalDateTime timeCreation;
+    private Boolean active;
 
 }

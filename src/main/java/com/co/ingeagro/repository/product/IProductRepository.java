@@ -41,5 +41,11 @@ public interface IProductRepository {
      */
     ProductData getById(Long productId);
 
+    /**
+     * Remove product by its id
+     * @param productId the product id
+     */
+    void removeByProductId(Long productId);
+
 
 }

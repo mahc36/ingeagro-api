@@ -10,11 +10,13 @@ import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.Seller;
 import com.co.ingeagro.repository.seller.ISellerRepository;
 import com.co.ingeagro.service.seller.ISellerService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,7 +73,9 @@ public class SellerService implements ISellerService {
     public List<Product> getAllBySellerId(Long sellerId) {
         List<ProductData> myProducts = repository.getAllBySellerId(sellerId);
         // Just sorting
-        myProducts = myProducts.stream().sorted((p1, p2) -> {
+        myProducts = myProducts.stream()
+            .filter(isActive())
+            .sorted((p1, p2) -> {
             if(p1.getStock().getRemainingQuantity() > p2.getStock().getRemainingQuantity()){
                 return -1;
             }
@@ -82,5 +86,12 @@ public class SellerService implements ISellerService {
         }).collect(Collectors.toList());
 
         return productConverter.convertAll2Model(myProducts);
+    }
+
+    @NotNull
+    private Predicate<ProductData> isActive() {
+        return p -> {
+            return p.getActive() == null || p.getActive();
+        };
     }
 }

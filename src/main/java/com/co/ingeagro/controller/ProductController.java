@@ -3,6 +3,7 @@ package com.co.ingeagro.controller;
 import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.form.ProductForm;
+import com.co.ingeagro.model.form.RemoveProductForm;
 import com.co.ingeagro.service.product.IProductService;
 import com.co.ingeagro.service.seller.ISellerService;
 import lombok.Data;
@@ -33,6 +34,11 @@ public class ProductController {
     @RequestMapping(value= ControllerConstants.SAVE ,method = RequestMethod.POST)
     public void save(@RequestBody ProductForm product) throws IngeagroException {
         this.productService.saveProduct(product);
+    }
+
+    @RequestMapping(value= ControllerConstants.REMOVE ,method = RequestMethod.POST)
+    public void remove(@RequestBody RemoveProductForm product) throws IngeagroException {
+        this.productService.removeProduct(product);
     }
 
     @RequestMapping(value= ControllerConstants.FIND_ALL ,method = RequestMethod.GET)

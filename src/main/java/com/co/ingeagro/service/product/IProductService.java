@@ -3,6 +3,7 @@ package com.co.ingeagro.service.product;
 import com.co.ingeagro.exception.IngeagroException;
 import com.co.ingeagro.model.Product;
 import com.co.ingeagro.model.form.ProductForm;
+import com.co.ingeagro.model.form.RemoveProductForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +16,13 @@ public interface IProductService {
      * @param product
      */
     void saveProduct(ProductForm product) throws IngeagroException;
+
+    /**
+     *
+     * @param product to remove
+     * @throws IngeagroException if an error happens
+     */
+    void removeProduct(RemoveProductForm product) throws IngeagroException;
 
     /**
      *
